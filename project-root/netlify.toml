@@ -1,0 +1,9 @@
+[build]
+  publish = "public"  # Path to your static files (index.html)
+  functions = "functions"  # Path to your serverless functions
+
+# Optional: configure a redirect to use the function at a specific URL
+[[redirects]]
+  from = "/webhook"
+  to = "/.netlify/functions/webhook-proxy"
+  status = 200
