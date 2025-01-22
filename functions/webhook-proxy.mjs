@@ -3,6 +3,7 @@ const RATE_LIMIT = 10; // Maximum number of requests allowed (you can adjust thi
 const TIME_FRAME = 60000; // 1 minute (in milliseconds)
 
 const ROBLOX_USER_AGENT = 'Roblox'; // Simple check for Roblox User-Agent
+const DISCORD_INVITE_REGEX = /discord\.gg\/\S+/i; // Regex to match Discord invite links
 
 export async function handler(event, context) {
     const clientIp = event?.requestContext?.identity?.sourceIp || 'unknown'; // Fallback to 'unknown' if IP is missing
@@ -52,6 +53,15 @@ export async function handler(event, context) {
         // Parse the request body
         const body = JSON.parse(event.body);
         console.info(`Request received from IP: ${clientIp}, User-Agent: ${userAgent}, Payload:`, body);
+
+        // Check if the payload contains a Discord invite link (discord.gg or discord.com)
+        if (DISCORD_INVITE_REGEX.test(JSON.stringify(body))) {
+            console.error(`Request rejected: Contains Discord invite link from IP: ${clientIp}`);
+            return {
+                statusCode: 403,
+                body: JSON.stringify({ error: 'Forbidden: Discord invite link detected' }),
+            };
+        }
 
         // Send the payload to the Discord webhook
         const response = await fetch(webhookUrl, {
