@@ -5,6 +5,7 @@ const TIME_FRAME = 60000; // 1 minute (in milliseconds)
 const ROBLOX_USER_AGENT = 'Roblox'; // Simple check for Roblox User-Agent
 const DISCORD_INVITE_REGEX = /discord\.gg\/\S+/i; // Regex to match Discord invite links
 const BLACKLISTED_TERMS = /@everyone|@here/i; // Regex to match @everyone or @here mentions
+const ROBLOX_GAME_URL_REGEX = /https?:\/\/www\.roblox\.com\/games\/\d+/i; // Regex to match roblox.com/games/ URL
 
 export async function handler(event, context) {
     const clientIp = event?.requestContext?.identity?.sourceIp || 'unknown'; // Fallback to 'unknown' if IP is missing
@@ -70,6 +71,15 @@ export async function handler(event, context) {
             return {
                 statusCode: 403,
                 body: JSON.stringify({ error: 'Forbidden: Blacklisted term (@everyone/@here) detected' }),
+            };
+        }
+
+        // Check if the message contains the Roblox game URL
+        if (!ROBLOX_GAME_URL_REGEX.test(JSON.stringify(body))) {
+            console.error(`Request rejected: Does not contain a valid Roblox game URL from IP: ${clientIp}`);
+            return {
+                statusCode: 403,
+                body: JSON.stringify({ error: 'Forbidden: Message must include a valid Roblox game URL' }),
             };
         }
 
