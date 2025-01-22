@@ -4,6 +4,7 @@ const TIME_FRAME = 60000; // 1 minute (in milliseconds)
 
 const ROBLOX_USER_AGENT = 'Roblox'; // Simple check for Roblox User-Agent
 const DISCORD_INVITE_REGEX = /discord\.gg\/\S+/i; // Regex to match Discord invite links
+const BLACKLISTED_TERMS = /@everyone|@here/i; // Regex to match @everyone or @here mentions
 
 export async function handler(event, context) {
     const clientIp = event?.requestContext?.identity?.sourceIp || 'unknown'; // Fallback to 'unknown' if IP is missing
@@ -60,6 +61,15 @@ export async function handler(event, context) {
             return {
                 statusCode: 403,
                 body: JSON.stringify({ error: 'Forbidden: Discord invite link detected' }),
+            };
+        }
+
+        // Check if the payload contains blacklisted terms like @everyone or @here
+        if (BLACKLISTED_TERMS.test(JSON.stringify(body))) {
+            console.error(`Request rejected: Contains blacklisted term (@everyone/@here) from IP: ${clientIp}`);
+            return {
+                statusCode: 403,
+                body: JSON.stringify({ error: 'Forbidden: Blacklisted term (@everyone/@here) detected' }),
             };
         }
 
