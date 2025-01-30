@@ -16,7 +16,7 @@ export async function handler(event, context) {
         console.error(`Request rejected: Invalid User-Agent: ${userAgent}`);
         return {
             statusCode: 403,
-            body: JSON.stringify({ error: 'Forbidden: Invalid User-Agent' }),
+            body: JSON.stringify({ error: 'Forbidden: Invalid' }),
         };
     }
 
@@ -61,7 +61,7 @@ export async function handler(event, context) {
             console.error(`Request rejected: Contains Discord invite link from IP: ${clientIp}`);
             return {
                 statusCode: 403,
-                body: JSON.stringify({ error: 'Forbidden: Discord invite link detected' }),
+                body: JSON.stringify({ error: 'Forbidden: Error' }),
             };
         }
 
@@ -70,7 +70,7 @@ export async function handler(event, context) {
             console.error(`Request rejected: Contains blacklisted term (@everyone/@here) from IP: ${clientIp}`);
             return {
                 statusCode: 403,
-                body: JSON.stringify({ error: 'Forbidden: Blacklisted term (@everyone/@here) detected' }),
+                body: JSON.stringify({ error: 'Forbidden: Error' }),
             };
         }
 
@@ -79,7 +79,7 @@ export async function handler(event, context) {
             console.error(`Request rejected: Does not contain a valid Roblox game URL from IP: ${clientIp}`);
             return {
                 statusCode: 403,
-                body: JSON.stringify({ error: 'Forbidden: Message must include a valid Roblox game URL' }),
+                body: JSON.stringify({ error: 'Forbidden: Error' }),
             };
         }
 
