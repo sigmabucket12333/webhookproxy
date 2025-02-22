@@ -1,5 +1,5 @@
 let requestTimes = {}; // This will store the timestamp of the last request from each client (keyed by IP or unique identifier)
-const RATE_LIMIT = 10; // Maximum number of requests allowed (you can adjust this value)
+const RATE_LIMIT = 30; // Maximum number of requests allowed (you can adjust this value)
 const TIME_FRAME = 60000; // 1 minute (in milliseconds)
 
 const ROBLOX_USER_AGENT = 'Roblox'; // Simple check for Roblox User-Agent
